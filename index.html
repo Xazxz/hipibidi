@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#050508">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>For You</title>
+    <meta name="description" content="A birthday letter">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Italiana&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Background Music -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Music Toggle Button -->
+    <button class="music-toggle" id="musicToggle" aria-label="Toggle music">
+        <span class="music-icon">♪</span>
+        <span class="music-info">
+            <span class="song-title">Just You</span>
+            <span class="song-artist">Teddy Adhitya</span>
+        </span>
+    </button>
+
+    <!-- Starfield Background -->
+    <div class="starfield" id="starfield"></div>
+
+    <!-- Constellation Lines -->
+    <svg class="constellation-svg" id="constellationSvg"></svg>
+
+    <!-- Shooting Stars -->
+    <div class="shooting-stars" id="shootingStars"></div>
+
+    <!-- Floating Orbs -->
+    <div class="floating-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Ambient Particles -->
+    <div class="ambient-particles" id="ambientParticles"></div>
+
+    <!-- Zodiac Constellations -->
+    <div class="zodiac-constellations">
+        <!-- Cancer Constellation (top left) -->
+        <svg class="zodiac cancer" viewBox="0 0 200 200">
+            <g stroke="rgba(255,255,255,0.15)" stroke-width="1" fill="none">
+                <circle cx="40" cy="80" r="3" fill="rgba(255,255,255,0.4)" />
+                <circle cx="70" cy="60" r="2" fill="rgba(255,255,255,0.3)" />
+                <circle cx="100" cy="70" r="3" fill="rgba(255,255,255,0.5)" />
+                <circle cx="130" cy="90" r="2" fill="rgba(255,255,255,0.3)" />
+                <circle cx="160" cy="120" r="3" fill="rgba(255,255,255,0.4)" />
+                <line x1="40" y1="80" x2="70" y2="60" />
+                <line x1="70" y1="60" x2="100" y2="70" />
+                <line x1="100" y1="70" x2="130" y2="90" />
+                <line x1="130" y1="90" x2="160" y2="120" />
+            </g>
+            <text x="85" y="140" fill="rgba(255,255,255,0.2)" font-size="14" font-family="Italiana, serif">♋</text>
+        </svg>
+
+        <!-- Libra Constellation (bottom right) -->
+        <svg class="zodiac libra" viewBox="0 0 200 200">
+            <g stroke="rgba(255,255,255,0.15)" stroke-width="1" fill="none">
+                <circle cx="50" cy="100" r="3" fill="rgba(255,255,255,0.4)" />
+                <circle cx="80" cy="70" r="2" fill="rgba(255,255,255,0.3)" />
+                <circle cx="100" cy="50" r="3" fill="rgba(255,255,255,0.5)" />
+                <circle cx="120" cy="70" r="2" fill="rgba(255,255,255,0.3)" />
+                <circle cx="150" cy="100" r="3" fill="rgba(255,255,255,0.4)" />
+                <circle cx="100" cy="120" r="2" fill="rgba(255,255,255,0.3)" />
+                <line x1="50" y1="100" x2="80" y2="70" />
+                <line x1="80" y1="70" x2="100" y2="50" />
+                <line x1="100" y1="50" x2="120" y2="70" />
+                <line x1="120" y1="70" x2="150" y2="100" />
+                <line x1="100" y1="50" x2="100" y2="120" />
+            </g>
+            <text x="85" y="160" fill="rgba(255,255,255,0.2)" font-size="14" font-family="Italiana, serif">♎</text>
+        </svg>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Decorative Elements Around Card -->
+        <div class="card-container">
+            <!-- Orbiting elements -->
+            <div class="orbit orbit-1">
+                <div class="orbit-dot"></div>
+            </div>
+            <div class="orbit orbit-2">
+                <div class="orbit-dot"></div>
+            </div>
+
+            <!-- Glass Card -->
+            <div class="glass-card" id="mainCard">
+                <!-- Glow effect -->
+                <div class="card-glow"></div>
+
+                <!-- Interactive Content States -->
+                <div class="content-wrapper">
+                    <!-- State 0: Opening -->
+                    <div class="content-state active" data-state="0">
+                        <div class="cat-drawing">
+                            <svg viewBox="0 0 100 80" class="cat-svg">
+                                <path
+                                    d="M30 60 Q25 40 30 30 L35 15 L40 30 Q50 25 60 30 L65 15 L70 30 Q75 40 70 60 Q50 70 30 60"
+                                    fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                <circle cx="40" cy="42" r="2" fill="currentColor" />
+                                <circle cx="60" cy="42" r="2" fill="currentColor" />
+                                <path d="M48 50 Q50 52 52 50" fill="none" stroke="currentColor" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                                <path d="M45 55 Q50 58 55 55" fill="none" stroke="currentColor" stroke-width="1"
+                                    stroke-linecap="round" />
+                            </svg>
+                        </div>
+                        <h1 class="main-title">Happy Birthday</h1>
+                        <p class="subtitle">a letter, written in starlight</p>
+                        <p class="tap-hint">tap to begin</p>
+                    </div>
+
+                    <!-- State 1 -->
+                    <div class="content-state" data-state="1">
+                        <p class="poem-text">
+                            In the quiet hours before dawn,<br>
+                            when the stars still hold the sky,<br>
+                            I find myself grateful<br>
+                            that somewhere in this vast universe,<br>
+                            you exist.
+                        </p>
+                        <div class="accent-star">✦</div>
+                    </div>
+
+                    <!-- State 2 -->
+                    <div class="content-state" data-state="2">
+                        <p class="poem-text">
+                            You move through life<br>
+                            with the grace of midnight cats,<br>
+                            curious and soft,<br>
+                            finding warmth in small corners,<br>
+                            making homes out of moments.
+                        </p>
+                        <div class="cat-silhouette-text">^ᓚᘏᗢ^</div>
+                    </div>
+
+                    <!-- State 3 -->
+                    <div class="content-state" data-state="3">
+                        <p class="poem-text">
+                            Another year of you—<br>
+                            your laughter like a quiet song,<br>
+                            your silences that speak volumes,<br>
+                            the way you see beauty<br>
+                            where others forget to look.
+                        </p>
+                        <div class="moon-symbol">☽</div>
+                    </div>
+
+                    <!-- State 4 -->
+                    <div class="content-state" data-state="4">
+                        <p class="poem-text">
+                            May this year hold<br>
+                            gentle mornings and soft rain,<br>
+                            good books and warm tea,<br>
+                            long naps with a cat in your lap,<br>
+                            and all the stars you can hold.
+                        </p>
+                        <div class="paw-prints">
+                            <span>·</span><span>:</span><span>·</span>
+                        </div>
+                    </div>
+
+                    <!-- State 5: Photo -->
+                    <div class="content-state photo-state" data-state="5">
+                        <!-- Decorative stars around photo -->
+                        <div class="photo-decorations">
+                            <span class="photo-star star-1">✦</span>
+                            <span class="photo-star star-2">✧</span>
+                            <span class="photo-star star-3">✦</span>
+                            <span class="photo-star star-4">·</span>
+                            <span class="photo-star star-5">✧</span>
+                            <span class="photo-star star-6">·</span>
+                        </div>
+
+                        <div class="photo-container">
+                            <!-- Orbiting sparkle -->
+                            <div class="photo-orbit">
+                                <div class="orbit-sparkle"></div>
+                            </div>
+
+                            <div class="photo-frame">
+                                <div class="frame-glow"></div>
+                                <div class="frame-shimmer"></div>
+                                <img src="photo.jpg" alt="My love" class="girlfriend-photo">
+                                <div class="frame-border"></div>
+                                <!-- Corner accents -->
+                                <div class="corner-accent top-left"></div>
+                                <div class="corner-accent top-right"></div>
+                                <div class="corner-accent bottom-left"></div>
+                                <div class="corner-accent bottom-right"></div>
+                            </div>
+                        </div>
+
+                        <p class="photo-caption">my favorite person ✦</p>
+                        <p class="photo-subcaption">in my favorite universe</p>
+                    </div>
+
+                    <!-- State 6: Final -->
+                    <div class="content-state" data-state="6">
+                        <div class="final-stars-text">
+                            <span>✦</span>
+                            <span>✧</span>
+                            <span>✦</span>
+                        </div>
+                        <div class="cat-drawing final">
+                            <svg viewBox="0 0 100 80" class="cat-svg">
+                                <path
+                                    d="M30 60 Q25 40 30 30 L35 15 L40 30 Q50 25 60 30 L65 15 L70 30 Q75 40 70 60 Q50 70 30 60"
+                                    fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                <path d="M38 44 Q40 42 42 44" fill="none" stroke="currentColor" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                                <path d="M58 44 Q60 42 62 44" fill="none" stroke="currentColor" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                                <path d="M48 50 Q50 52 52 50" fill="none" stroke="currentColor" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                                <path d="M45 55 Q50 58 55 55" fill="none" stroke="currentColor" stroke-width="1"
+                                    stroke-linecap="round" />
+                            </svg>
+                        </div>
+                        <h2 class="final-title">Happy Birthday</h2>
+                        <p class="final-text">with love, under every star</p>
+                        <p class="final-signature">— always yours</p>
+                    </div>
+                </div>
+
+                <div class="progress-dots">
+                    <span class="dot active" data-dot="0"></span>
+                    <span class="dot" data-dot="1"></span>
+                    <span class="dot" data-dot="2"></span>
+                    <span class="dot" data-dot="3"></span>
+                    <span class="dot" data-dot="4"></span>
+                    <span class="dot" data-dot="5"></span>
+                    <span class="dot" data-dot="6"></span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Cursor Trail (desktop only) -->
+    <div class="cursor-trail" id="cursorTrail"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

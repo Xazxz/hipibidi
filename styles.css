@@ -1,0 +1,1330 @@
+/* ====================================
+   ELEGANT BIRTHDAY - DYNAMIC STARLIT
+   Immersive & Atmospheric
+   ==================================== */
+
+/* CSS Variables */
+:root {
+    --bg-primary: #050508;
+    --bg-secondary: #0a0a12;
+    --glass-bg: rgba(255, 255, 255, 0.02);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-shadow: rgba(0, 0, 0, 0.7);
+    --star-color: rgba(255, 255, 255, 0.9);
+    --star-glow: rgba(180, 200, 255, 0.6);
+    --text-primary: rgba(255, 255, 255, 0.95);
+    --text-secondary: rgba(255, 255, 255, 0.65);
+    --text-muted: rgba(255, 255, 255, 0.35);
+    --accent-warm: rgba(255, 240, 220, 0.9);
+    --orb-color-1: rgba(100, 140, 200, 0.15);
+    --orb-color-2: rgba(150, 120, 180, 0.12);
+    --orb-color-3: rgba(180, 160, 200, 0.1);
+}
+
+/* Reset & Base */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    body {
+        cursor: none;
+    }
+}
+
+/* ====================================
+   MUSIC TOGGLE
+   ==================================== */
+.music-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 30px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.music-toggle:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: scale(1.02);
+}
+
+.music-icon {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+}
+
+.music-toggle.playing .music-icon {
+    color: var(--accent-warm);
+    animation: musicPulse 1s ease-in-out infinite;
+}
+
+@keyframes musicPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+.music-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.song-title {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.song-artist {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Mobile: hide song info */
+@media (max-width: 480px) {
+    .music-toggle {
+        padding: 12px;
+        top: 15px;
+        right: 15px;
+    }
+
+    .music-info {
+        display: none;
+    }
+}
+
+/* ====================================
+   STARFIELD BACKGROUND
+   ==================================== */
+.starfield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background:
+        radial-gradient(ellipse at 30% 20%, rgba(60, 80, 120, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(80, 60, 100, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom, #0d0d18 0%, #050508 100%);
+}
+
+.star {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--star-color);
+    animation: twinkle var(--duration, 3s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+}
+
+.star.bright {
+    box-shadow: 0 0 6px var(--star-glow), 0 0 12px var(--star-glow);
+}
+
+.star.cross {
+    background: transparent;
+}
+
+.star.cross::before,
+.star.cross::after {
+    content: '';
+    position: absolute;
+    background: var(--star-color);
+}
+
+.star.cross::before {
+    width: 100%;
+    height: 1px;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+.star.cross::after {
+    width: 1px;
+    height: 100%;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: var(--min-opacity, 0.3);
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: var(--max-opacity, 1);
+        transform: scale(var(--scale, 1.2));
+    }
+}
+
+/* ====================================
+   CONSTELLATION LINES
+   ==================================== */
+.constellation-svg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.constellation-line {
+    stroke: rgba(255, 255, 255, 0.08);
+    stroke-width: 0.5;
+    fill: none;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: drawLine 3s ease-out forwards;
+}
+
+@keyframes drawLine {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* ====================================
+   FLOATING ORBS
+   ==================================== */
+.floating-orbs {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+}
+
+.orb-1 {
+    width: 40vmax;
+    height: 40vmax;
+    background: var(--orb-color-1);
+    top: -10%;
+    left: -10%;
+    animation: orbFloat1 25s ease-in-out infinite;
+}
+
+.orb-2 {
+    width: 35vmax;
+    height: 35vmax;
+    background: var(--orb-color-2);
+    bottom: -15%;
+    right: -10%;
+    animation: orbFloat2 30s ease-in-out infinite;
+}
+
+.orb-3 {
+    width: 25vmax;
+    height: 25vmax;
+    background: var(--orb-color-3);
+    top: 40%;
+    left: 60%;
+    animation: orbFloat3 20s ease-in-out infinite;
+}
+
+@keyframes orbFloat1 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(15%, 20%) scale(1.1);
+    }
+
+    66% {
+        transform: translate(5%, 10%) scale(0.95);
+    }
+}
+
+@keyframes orbFloat2 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(-20%, -15%) scale(1.15);
+    }
+
+    66% {
+        transform: translate(-10%, -5%) scale(0.9);
+    }
+}
+
+@keyframes orbFloat3 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(-30%, 20%) scale(1.2);
+    }
+}
+
+/* ====================================
+   SHOOTING STARS
+   ==================================== */
+.shooting-stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.shooting-star {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.9));
+    transform: rotate(45deg);
+    transform-origin: right center;
+    animation: shootingStar 1s ease-out forwards;
+    border-radius: 2px;
+}
+
+.shooting-star::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -1px;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.6);
+}
+
+@keyframes shootingStar {
+    0% {
+        opacity: 1;
+        transform: rotate(45deg) translateX(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: rotate(45deg) translateX(400px);
+    }
+}
+
+
+
+/* ====================================
+   AMBIENT PARTICLES
+   ==================================== */
+.ambient-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+    pointer-events: none;
+}
+
+.ambient-particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    animation: floatUp 15s linear infinite;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 0;
+        transform: translateY(100vh) translateX(0);
+    }
+
+    10% {
+        opacity: 0.5;
+    }
+
+    90% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-100px) translateX(30px);
+    }
+}
+
+/* ====================================
+   MAIN CONTENT
+   ==================================== */
+.main-content {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+/* ====================================
+   CARD CONTAINER WITH ORBITS
+   ==================================== */
+.card-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Orbiting elements */
+.orbit {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    pointer-events: none;
+}
+
+.orbit-1 {
+    width: 550px;
+    height: 550px;
+    animation: orbitRotate 60s linear infinite;
+}
+
+.orbit-2 {
+    width: 650px;
+    height: 650px;
+    animation: orbitRotate 90s linear infinite reverse;
+}
+
+.orbit-dot {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes orbitRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ====================================
+   GLASS CARD
+   ==================================== */
+.glass-card {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    min-height: 400px;
+    max-height: 90vh;
+    aspect-ratio: 4 / 5;
+    padding: 48px 40px;
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.03) 0%,
+            rgba(255, 255, 255, 0.01) 100%);
+    border-radius: 32px;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    box-shadow:
+        0 25px 80px var(--glass-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 50%,
+            rgba(100, 140, 200, 0.08) 0%,
+            transparent 40%);
+    pointer-events: none;
+    animation: glowPulse 8s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.12) 50%,
+            transparent 100%);
+}
+
+.glass-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.05) 50%,
+            transparent 100%);
+}
+
+@media (hover: hover) {
+    .glass-card:hover {
+        transform: translateY(-6px) scale(1.01);
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow:
+            0 35px 100px var(--glass-shadow),
+            inset 0 1px 0 rgba(255, 255, 255, 0.06),
+            0 0 60px rgba(100, 140, 200, 0.08);
+    }
+}
+
+.glass-card:active {
+    transform: scale(0.98);
+    transition: transform 0.15s ease;
+}
+
+/* Ripple effect */
+.glass-card .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+            rgba(255, 255, 255, 0.15) 0%,
+            transparent 70%);
+    transform: scale(0);
+    animation: rippleEffect 1s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes rippleEffect {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* ====================================
+   CONTENT STATES
+   ==================================== */
+.content-wrapper {
+    position: relative;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-state {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(25px) scale(0.98);
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.content-state.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.content-state.exiting {
+    opacity: 0;
+    transform: translateY(-25px) scale(0.98);
+}
+
+/* ====================================
+   TYPOGRAPHY
+   ==================================== */
+.main-title {
+    font-family: 'Italiana', serif;
+    font-size: clamp(2.2rem, 8vw, 3rem);
+    font-weight: 400;
+    color: var(--text-primary);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+}
+
+.subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    text-transform: lowercase;
+}
+
+.poem-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.1rem, 4vw, 1.35rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 2.1;
+    letter-spacing: 0.02em;
+}
+
+.final-title {
+    font-family: 'Italiana', serif;
+    font-size: clamp(2rem, 7vw, 2.8rem);
+    font-weight: 400;
+    color: var(--text-primary);
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+}
+
+.final-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+}
+
+.final-signature {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    opacity: 0.6;
+}
+
+.tap-hint {
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: lowercase;
+    margin-top: 28px;
+    animation: fadeInOut 3s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+
+    0%,
+    100% {
+        opacity: 0.2;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* ====================================
+   CAT DRAWING (SVG)
+   ==================================== */
+.cat-drawing {
+    width: 80px;
+    height: 64px;
+    margin: 0 auto 20px;
+    color: var(--text-secondary);
+    opacity: 0.8;
+    animation: catFloat 5s ease-in-out infinite;
+}
+
+.cat-drawing.final {
+    width: 70px;
+    height: 56px;
+    margin-bottom: 16px;
+}
+
+.cat-svg {
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes catFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+/* ====================================
+   ACCENT ELEMENTS (Text-based)
+   ==================================== */
+.accent-star {
+    font-size: 1.2rem;
+    color: var(--accent-warm);
+    margin-top: 24px;
+    opacity: 0.7;
+    animation: starPulse 3s ease-in-out infinite;
+}
+
+.cat-silhouette-text {
+    font-size: 1.4rem;
+    margin-top: 24px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    animation: catFloat 6s ease-in-out infinite;
+}
+
+.moon-symbol {
+    font-size: 1.5rem;
+    margin-top: 24px;
+    color: var(--accent-warm);
+    opacity: 0.6;
+    animation: moonGlow 4s ease-in-out infinite;
+}
+
+@keyframes moonGlow {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        text-shadow: 0 0 10px rgba(255, 240, 220, 0.3);
+    }
+
+    50% {
+        opacity: 0.8;
+        text-shadow: 0 0 20px rgba(255, 240, 220, 0.5);
+    }
+}
+
+.paw-prints {
+    margin-top: 24px;
+    color: var(--text-muted);
+    font-size: 1.5rem;
+    letter-spacing: 0.5em;
+    opacity: 0.5;
+}
+
+.final-stars-text {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    color: var(--accent-warm);
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.final-stars-text span {
+    animation: starPulse 2s ease-in-out infinite;
+}
+
+.final-stars-text span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.final-stars-text span:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.final-stars-text span:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes starPulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.3);
+    }
+}
+
+/* ====================================
+   PROGRESS DOTS
+   ==================================== */
+.progress-dots {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.dot.active {
+    width: 24px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--text-secondary), var(--text-muted));
+}
+
+.dot:hover {
+    background: var(--text-secondary);
+    transform: scale(1.2);
+}
+
+/* ====================================
+   CURSOR TRAIL
+   ==================================== */
+.cursor-trail {
+    position: fixed;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+            rgba(180, 200, 255, 0.4) 0%,
+            transparent 70%);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    display: none;
+    mix-blend-mode: screen;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .cursor-trail {
+        display: block;
+    }
+}
+
+/* ====================================
+   RESPONSIVE
+   ==================================== */
+@media (max-width: 600px) {
+    .orbit {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 16px;
+    }
+
+    .glass-card {
+        padding: 40px 24px;
+        border-radius: 24px;
+        min-height: 400px;
+    }
+
+    .content-wrapper {
+        min-height: 280px;
+    }
+
+    .poem-text {
+        line-height: 2;
+    }
+
+    .orb-1,
+    .orb-2 {
+        filter: blur(80px);
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .glass-card {
+        min-height: 300px;
+        padding: 28px 24px;
+    }
+
+    .content-wrapper {
+        min-height: 220px;
+    }
+
+    .cat-drawing {
+        width: 60px;
+        height: 48px;
+        margin-bottom: 12px;
+    }
+}
+
+@media (min-width: 768px) {
+    .glass-card {
+        max-width: 480px;
+        min-height: 460px;
+        padding: 56px 48px;
+    }
+
+    .content-wrapper {
+        min-height: 340px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .glass-card {
+        max-width: 520px;
+        min-height: 500px;
+    }
+}
+
+/* Safe areas */
+@supports (padding: max(0px)) {
+    .main-content {
+        padding-left: max(24px, env(safe-area-inset-left));
+        padding-right: max(24px, env(safe-area-inset-right));
+        padding-bottom: max(24px, env(safe-area-inset-bottom));
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ====================================
+   ZODIAC CONSTELLATIONS
+   ==================================== */
+.zodiac-constellations {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.zodiac {
+    position: absolute;
+    opacity: 0.6;
+    animation: constellationFloat 20s ease-in-out infinite;
+}
+
+.zodiac.cancer {
+    width: 150px;
+    height: 150px;
+    top: 8%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.zodiac.libra {
+    width: 140px;
+    height: 140px;
+    bottom: 10%;
+    right: 5%;
+    animation-delay: 5s;
+}
+
+@keyframes constellationFloat {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: translate(10px, -10px) rotate(3deg);
+        opacity: 0.7;
+    }
+}
+
+/* ====================================
+   PHOTO FRAME - ENHANCED COSMETICS
+   ==================================== */
+.photo-state {
+    position: relative;
+}
+
+.photo-container {
+    position: relative;
+    display: inline-block;
+}
+
+.photo-decorations {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.photo-star {
+    position: absolute;
+    color: var(--accent-warm);
+    font-size: 0.8rem;
+    animation: photoStarFloat 3s ease-in-out infinite;
+}
+
+.star-1 {
+    top: 5%;
+    left: 15%;
+    animation-delay: 0s;
+}
+
+.star-2 {
+    top: 10%;
+    right: 20%;
+    animation-delay: 0.5s;
+    font-size: 0.6rem;
+}
+
+.star-3 {
+    top: 50%;
+    left: 5%;
+    animation-delay: 1s;
+}
+
+.star-4 {
+    top: 30%;
+    right: 10%;
+    animation-delay: 1.5s;
+    font-size: 0.5rem;
+}
+
+.star-5 {
+    bottom: 25%;
+    left: 10%;
+    animation-delay: 2s;
+    font-size: 0.7rem;
+}
+
+.star-6 {
+    bottom: 15%;
+    right: 15%;
+    animation-delay: 2.5s;
+    font-size: 0.4rem;
+}
+
+@keyframes photoStarFloat {
+
+    0%,
+    100% {
+        opacity: 0.4;
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(-5px) scale(1.2);
+    }
+}
+
+/* orbit orbit ajip */
+.photo-orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 220px;
+    transform: translate(-50%, -50%);
+    animation: photoOrbitRotate 12s linear infinite;
+    pointer-events: none;
+}
+
+.orbit-sparkle {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--accent-warm);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent-warm), 0 0 20px var(--accent-warm);
+}
+
+@keyframes photoOrbitRotate {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+.photo-frame {
+    position: relative;
+    width: 140px;
+    height: 180px;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: visible;
+}
+
+.frame-glow {
+    position: absolute;
+    top: -30%;
+    left: -30%;
+    width: 160%;
+    height: 160%;
+    background: radial-gradient(ellipse at center,
+            rgba(180, 200, 255, 0.2) 0%,
+            rgba(255, 220, 180, 0.1) 30%,
+            transparent 60%);
+    animation: frameGlow 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.frame-shimmer {
+    display: none;
+}
+
+
+@keyframes frameGlow {
+
+    0%,
+    100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+.girlfriend-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    filter: grayscale(10%) contrast(1.05) brightness(1.02);
+    transition: all 0.5s ease;
+}
+
+.frame-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    pointer-events: none;
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.15),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.15),
+        0 15px 50px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(180, 200, 255, 0.1);
+}
+
+/* Corner accents */
+.corner-accent {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+}
+
+.corner-accent.top-left {
+    top: -4px;
+    left: -4px;
+    border-right: none;
+    border-bottom: none;
+    border-radius: 4px 0 0 0;
+}
+
+.corner-accent.top-right {
+    top: -4px;
+    right: -4px;
+    border-left: none;
+    border-bottom: none;
+    border-radius: 0 4px 0 0;
+}
+
+.corner-accent.bottom-left {
+    bottom: -4px;
+    left: -4px;
+    border-right: none;
+    border-top: none;
+    border-radius: 0 0 0 4px;
+}
+
+.corner-accent.bottom-right {
+    bottom: -4px;
+    right: -4px;
+    border-left: none;
+    border-top: none;
+    border-radius: 0 0 4px 0;
+}
+
+.photo-caption {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    letter-spacing: 0.08em;
+    margin-top: 20px;
+}
+
+.photo-subcaption {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    margin-top: 6px;
+    opacity: 0.7;
+}
+
+/* Responsive photo */
+@media (max-width: 480px) {
+    .photo-frame {
+        width: 120px;
+        height: 155px;
+    }
+
+    .photo-orbit {
+        width: 170px;
+        height: 190px;
+    }
+
+    .photo-star {
+        font-size: 0.6rem;
+    }
+
+    .zodiac.cancer,
+    .zodiac.libra {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media (min-width: 768px) {
+    .photo-frame {
+        width: 160px;
+        height: 210px;
+    }
+
+    .photo-orbit {
+        width: 230px;
+        height: 260px;
+    }
+
+    .zodiac.cancer {
+        width: 180px;
+        height: 180px;
+    }
+
+    .zodiac.libra {
+        width: 170px;
+        height: 170px;
+    }
+}
