@@ -1,9 +1,3 @@
-/* ====================================
-   ELEGANT BIRTHDAY - DYNAMIC STARLIT
-   Immersive & Atmospheric
-   ==================================== */
-
-/* CSS Variables */
 :root {
     --bg-primary: #050508;
     --bg-secondary: #0a0a12;
@@ -579,9 +573,9 @@ body {
     }
 }
 
-.glass-card:active {
-    transform: scale(0.98);
-    transition: transform 0.15s ease;
+.glass-card:active:not(.motion-blur) {
+    transform: scale(0.985);
+    transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Ripple effect */
@@ -614,14 +608,22 @@ body {
     justify-content: center;
 }
 
+/* === CONTENT STATE TRANSITIONS ===
+   Default (hidden): below, scaled down, invisible
+   .active: fully visible, in place
+   .exiting: slide up + fade out (leaving)
+   .entering: slide up from below + fade in (arriving)
+*/
 .content-state {
     position: absolute;
     width: 100%;
     text-align: center;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(25px) scale(0.98);
-    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(18px) scale(0.95);
+    /* No transition by default — JS controls timing directly */
+    transition: none;
+    will-change: transform, opacity, filter;
 }
 
 .content-state.active {
@@ -630,9 +632,46 @@ body {
     transform: translateY(0) scale(1);
 }
 
+/* Phase 1 exit: current card slides up + blurs out */
 .content-state.exiting {
+    visibility: visible;
     opacity: 0;
-    transform: translateY(-25px) scale(0.98);
+    transform: translateY(-14px) scale(0.97);
+    filter: blur(4px);
+    transition:
+        opacity 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+        filter 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Phase 2 enter: new card rises + sharpens in */
+.content-state.entering {
+    visibility: visible;
+    opacity: 0;
+    transform: translateY(18px) scale(0.95);
+    filter: blur(3px);
+}
+
+.content-state.entering.enter-active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+    transition:
+        opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+        filter 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* === CARD-LEVEL MOTION BLUR OVERLAY DURING TRANSITION === */
+.glass-card.motion-blur {
+    filter: blur(1.5px);
+    transition: filter 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: filter;
+}
+
+.glass-card.motion-blur-clear {
+    filter: blur(0px);
+    transition: filter 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ====================================
@@ -1180,8 +1219,60 @@ body {
     z-index: -1;
 }
 
+/* === PHOTO FLOATING EFFECT === */
+.girlfriend-photo {
+    animation: photoFloat 7s ease-in-out infinite;
+    will-change: transform;
+}
+
+@keyframes photoFloat {
+    0%, 100% {
+        transform: translateY(0px) scale(1);
+    }
+    30% {
+        transform: translateY(-5px) scale(1.008);
+    }
+    70% {
+        transform: translateY(3px) scale(0.997);
+    }
+}
+
+/* === PHOTO SHIMMER OVERLAY === */
 .frame-shimmer {
-    display: none;
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        105deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.07) 50%,
+        transparent 70%
+    );
+    border-radius: 10px;
+    pointer-events: none;
+    z-index: 2;
+    animation: shimmerSlide 5s ease-in-out infinite;
+    animation-delay: 1.5s;
+}
+
+@keyframes shimmerSlide {
+    0% {
+        left: -100%;
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    60% {
+        left: 150%;
+        opacity: 1;
+    }
+    61%, 100% {
+        left: 150%;
+        opacity: 0;
+    }
 }
 
 
