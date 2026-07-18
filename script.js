@@ -1,11 +1,4 @@
-/**
- * Birthday Website - Dynamic Starlit Night
- * Immersive atmosphere with constellations
- */
 
-// ====================================
-// STATE
-// ====================================
 const state = {
     currentState: 0,
     totalStates: 7,
@@ -13,9 +6,7 @@ const state = {
     stars: []
 };
 
-// ====================================
-// DOM ELEMENTS
-// ====================================
+
 const elements = {
     mainCard: document.getElementById('mainCard'),
     contentStates: document.querySelectorAll('.content-state'),
@@ -29,9 +20,7 @@ const elements = {
     musicToggle: document.getElementById('musicToggle')
 };
 
-// ====================================
-// INITIALIZATION
-// ====================================
+
 function init() {
     createStarfield();
     createConstellations();
@@ -56,9 +45,6 @@ function entranceAnimation() {
     });
 }
 
-// ====================================
-// STARFIELD
-// ====================================
 function createStarfield() {
     const starCount = window.innerWidth < 600 ? 100 : 200;
 
@@ -78,22 +64,22 @@ function createStar() {
     let size, isBright, isCross;
 
     if (rand > 0.97) {
-        // Cross-shaped bright star (3%)
+        // cross shaped bright star (3%)
         size = 8 + Math.random() * 4;
         isBright = true;
         isCross = true;
     } else if (rand > 0.92) {
-        // Bright star (5%)
+        // bright star (5%)
         size = 2 + Math.random() * 1.5;
         isBright = true;
         isCross = false;
     } else if (rand > 0.75) {
-        // Medium star (17%)
+        // medium star (17%)
         size = 1.2 + Math.random() * 0.8;
         isBright = false;
         isCross = false;
     } else {
-        // Small star (75%)
+        // small star (75%)
         size = 0.5 + Math.random() * 0.8;
         isBright = false;
         isCross = false;
@@ -125,23 +111,20 @@ function createStar() {
     state.stars.push({ x, y, bright: isBright });
 }
 
-// ====================================
-// CONSTELLATIONS
-// ====================================
 function createConstellations() {
-    // Get bright stars for constellation points
+    // get bright stars for constellation points
     const brightStars = state.stars.filter(s => s.bright);
 
     if (brightStars.length < 3) return;
 
-    // Create a few constellation-like connections
+    // create a few constellation-like connections
     const numConnections = Math.min(brightStars.length - 1, 5);
 
     for (let i = 0; i < numConnections; i++) {
         const star1 = brightStars[i];
         const star2 = brightStars[(i + 1) % brightStars.length];
 
-        // Only connect if they're reasonably close
+        // only connect if they're reasonably close
         const distance = Math.sqrt(
             Math.pow(star1.x - star2.x, 2) +
             Math.pow(star1.y - star2.y, 2)
@@ -166,9 +149,7 @@ function createConstellationLine(star1, star2, delay) {
     elements.constellationSvg.appendChild(line);
 }
 
-// ====================================
-// AMBIENT PARTICLES
-// ====================================
+
 function createAmbientParticles() {
     const count = window.innerWidth < 600 ? 10 : 20;
 
@@ -193,9 +174,7 @@ function createAmbientParticles() {
     }
 }
 
-// ====================================
-// SHOOTING STARS
-// ====================================
+
 function startShootingStars() {
     function scheduleNext() {
         const delay = 4000 + Math.random() * 10000;
@@ -229,8 +208,6 @@ function createShootingStar() {
 }
 
 
-// ====================================
-// EVENT LISTENERS
 // ====================================
 function setupEventListeners() {
     elements.mainCard.addEventListener('click', handleCardInteraction);
@@ -362,28 +339,58 @@ function goToState(targetState) {
 
     state.isTransitioning = true;
 
+    const card = elements.mainCard;
     const currentContent = elements.contentStates[state.currentState];
     const nextContent = elements.contentStates[targetState];
 
+    // ── Phase 0: Apply card-level motion blur ──────────────────
+    card.classList.remove('motion-blur-clear');
+    card.classList.add('motion-blur');
+
+    // ── Phase 1: Trigger EXIT animation on current state ───────
     currentContent.classList.add('exiting');
     currentContent.classList.remove('active');
 
+    // Wait for exit to complete (≈ 380 ms)
     setTimeout(() => {
+        // Clean up exiting state
         currentContent.classList.remove('exiting');
-        nextContent.classList.add('active');
 
-        state.currentState = targetState;
-        updateProgressDots();
+        // ── Phase 2: Set up ENTER state (invisible, below, blurred) ─
+        nextContent.classList.add('entering');
 
-        // Final celebration
-        if (targetState === state.totalStates - 1) {
-            triggerFinalCelebration();
-        }
+        // Force a reflow so the browser registers the starting state
+        // before we add enter-active (otherwise the transition is skipped)
+        // eslint-disable-next-line no-unused-expressions
+        nextContent.offsetHeight;
 
+        // ── Phase 3: Trigger ENTER animation ─────────────────────────
+        nextContent.classList.add('enter-active');
+
+        // Start clearing the card blur a bit after enter begins
         setTimeout(() => {
+            card.classList.remove('motion-blur');
+            card.classList.add('motion-blur-clear');
+        }, 80);
+
+        // When enter is done, swap to the stable .active class
+        setTimeout(() => {
+            nextContent.classList.remove('entering', 'enter-active');
+            nextContent.classList.add('active');
+
+            // Clean up card blur helper classes
+            card.classList.remove('motion-blur-clear');
+
+            state.currentState = targetState;
+            updateProgressDots();
+
+            if (targetState === state.totalStates - 1) {
+                triggerFinalCelebration();
+            }
+
             state.isTransitioning = false;
-        }, 350);
-    }, 350);
+        }, 560); // slightly longer than enter-active transition (550 ms)
+    }, 390); // slightly longer than exiting transition (380 ms)
 }
 
 function updateProgressDots() {
